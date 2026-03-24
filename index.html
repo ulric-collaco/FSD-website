@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Dev Experiments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            /* Minimalist UI/UX Palette */
             --bg-color: #f8fafc;
             --surface-color: #ffffff;
             --text-main: #0f172a;
@@ -40,10 +43,16 @@
             text-align: left;
         }
 
-        .header h1 {
-            font-size: 2.25rem;
+        .greeting-text {
+            /* Applying the cool font here */
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
             font-weight: 700;
             margin: 0 0 8px 0;
+            /* Using a sleek gradient to make it pop */
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             letter-spacing: -0.025em;
         }
 
@@ -106,7 +115,7 @@
         }
         
         @media (max-width: 480px) {
-            .header h1 {
+            .greeting-text {
                 font-size: 1.75rem;
             }
         }
@@ -115,7 +124,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Lab Repository</h1>
+            <!-- This ID allows JavaScript to target and change the text -->
+            <h1 id="dynamic-greeting" class="greeting-text">Hello, Soham Agate Sir!</h1>
             <p>Select an experiment to view.</p>
         </div>
 
@@ -133,5 +143,34 @@
             </a>
         </nav>
     </div>
+
+    <!-- The JavaScript logic that controls the greeting -->
+    <script>
+        function updateGreeting() {
+            // 1. Get the current hour of the day (returns a number between 0 and 23)
+            const currentHour = new Date().getHours();
+            
+            // 2. Set the default greeting to Evening (if the hour is very late or very early)
+            let timeGreeting = 'Good Evening';
+            
+            // 3. Simple logic to determine the time state
+            if (currentHour >= 5 && currentHour < 12) {
+                // Between 5 AM and 11:59 AM
+                timeGreeting = 'Good Morning';
+            } else if (currentHour >= 12 && currentHour < 18) {
+                // Between 12 PM and 5:59 PM
+                timeGreeting = 'Good Afternoon';
+            }
+
+            // 4. Combine the greeting with the specific name
+            const finalMessage = `${timeGreeting}, Soham Agate Sir!`;
+
+            // 5. Tell the DOM to overwrite the text of our H1 element with our new message
+            document.getElementById('dynamic-greeting').innerText = finalMessage;
+        }
+        
+        // Execute the function as soon as the page loads
+        updateGreeting();
+    </script>
 </body>
 </html>
