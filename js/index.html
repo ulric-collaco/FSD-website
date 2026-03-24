@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Contact Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Contact Manager</h1>
+            <p>Add and manage your contacts</p>
+        </header>
+
+        <main>
+            <section class="card form-section">
+                <!-- Contact Form -->
+                <form id="contactForm" novalidate>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" placeholder="John Doe">
+                        <span class="error-msg" id="nameError" aria-live="polite"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="john@example.com">
+                        <span class="error-msg" id="emailError" aria-live="polite"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="number" id="phone" placeholder="1234567890">
+                        <span class="error-msg" id="phoneError" aria-live="polite"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Add Contact</button>
+                </form>
+            </section>
+
+            <section class="card list-section">
+                <h2>Contact List</h2>
+                <div class="search-bar">
+                    <label for="searchInput" class="sr-only">Search contacts</label>
+                    <input type="text" id="searchInput" placeholder="Search by name or email...">
+                </div>
+                <!-- Div to hold dynamically generated contacts -->
+                <div id="contactList" class="contact-list"></div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
