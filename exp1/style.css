@@ -1,248 +1,372 @@
+/* Reset & Core */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+}
+
+html {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    /* Classic Nike font stack */
+    background: #fff;
+    color: #111;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
-    background-color: #f8f9fa;
-    color: #212529;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-.header {
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+a:hover {
+    opacity: 0.6;
+}
+
+ul {
+    list-style: none;
+}
+
+/* Navbar */
+.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 40px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 0 48px;
+    height: 60px;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .logo {
-    font-size: 28px;
-    font-weight: bold;
-    color: #e63946;
-}
-
-.nav-menu a {
-    margin: 0 15px;
-    text-decoration: none;
-    color: #212529;
-    font-weight: bold;
-}
-
-.nav-menu a:hover {
-    color: #e63946;
-}
-
-.search-bar input {
-    padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    outline: none;
-}
-
-.search-bar button {
-    padding: 10px 15px;
-    border: none;
-    background-color: #212529;
-    color: #ffffff;
-    font-weight: bold;
-    border-radius: 4px;
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: -1px;
     cursor: pointer;
 }
 
-.search-bar button:hover {
-    background-color: #e63946;
-}
-
-.banner {
-    position: relative;
-    height: 70vh;
+.navbar nav ul {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    gap: 24px;
 }
 
-.banner-img {
+.navbar nav a {
+    font-weight: 500;
+    font-size: 16px;
+    color: #111;
+}
+
+.nav-icons {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-icons a {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    width: 100%;
+    height: 85vh;
+    /* Large impactful hero */
+    display: flex;
+    justify-content: flex-start;
+    /* Align simplified content left or center as needed */
+    align-items: center;
+    overflow: hidden;
+}
+
+.hero-image {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: -1;
+    z-index: 1;
 }
 
-.banner-content {
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 40px;
-    text-align: center;
-    color: #ffffff;
-    border-radius: 8px;
-}
-
-.banner-content h1 {
-    font-size: 50px;
-    margin-bottom: 20px;
-}
-
-.banner-content p {
-    font-size: 20px;
-    margin-bottom: 30px;
-}
-
-.btn {
-    padding: 12px 24px;
-    background-color: #e63946;
-    color: #ffffff;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.btn:hover {
-    background-color: #d62828;
-}
-
-.category-section, .products-section {
-    padding: 60px 40px;
-    text-align: center;
-}
-
-.category-section h2, .products-section h2 {
-    font-size: 32px;
-    margin-bottom: 40px;
-}
-
-.category-grid, .product-grid {
-    display: grid;
-    gap: 30px;
-}
-
-.category-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-.product-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
-
-.category-card {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-.category-card img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 20px;
-}
-
-.product-card {
-    background-color: #ffffff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    position: relative;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.product-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-.product-card img {
-    width: 100%;
-    height: 280px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 20px;
-}
-
-.product-card h3 {
-    font-size: 22px;
-    margin-bottom: 10px;
-}
-
-.price {
-    font-size: 20px;
-    color: #e63946;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.sale-badge {
+/* Dark overlay for text readability if needed, but Nike often goes clean. 
+   Using a very subtle gradient for text pop without ruining the clean look */
+.hero::after {
+    content: '';
     position: absolute;
-    top: 35px;
-    left: 35px;
-    background-color: #e63946;
-    color: #ffffff;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: bold;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+    z-index: 2;
 }
 
-.footer {
-    background-color: #212529;
-    color: #f8f9fa;
-    padding: 60px 40px 20px;
+.hero-content {
+    position: absolute;
+    bottom: 60px;
+    left: 48px;
+    z-index: 3;
+    color: #fff;
+    max-width: 600px;
 }
 
-.footer-container {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    margin-bottom: 40px;
+.hero h1 {
+    font-family: 'Arial Black', sans-serif;
+    /* Heavy bold font */
+    font-size: 72px;
+    line-height: 0.9;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    letter-spacing: -2px;
 }
 
-.contact-info h3, .social-links h3 {
+.hero p {
     font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 24px;
+}
+
+.cta-group {
+    display: flex;
+    gap: 16px;
+}
+
+.btn-primary {
+    background: #fff;
+    color: #000;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.btn-primary:hover {
+    background: #e5e5e5;
+    transform: scale(1.02);
+    opacity: 1;
+    /* Override general a:hover */
+}
+
+/* Featured Sections */
+.featured {
+    padding: 60px 48px;
+}
+
+.section-header {
+    margin-bottom: 32px;
+}
+
+.section-header h2 {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+/* Horizontal Scroll Layout for "The Latest" */
+.product-scroll {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    scrollbar-width: none;
+    /* Hide scrollbar Firefox */
+}
+
+.product-scroll::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar Chrome/Safari */
+}
+
+/* Standard Grid Layout */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+/* Card Styling */
+.card {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Make existing scroll cards strictly sized */
+.product-scroll .card {
+    min-width: 400px;
+}
+
+.card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    /* Boxy square look */
+    object-fit: cover;
+    margin-bottom: 12px;
+}
+
+/* Full width card override (Trend grid) */
+.card.full-width {
+    grid-column: span 2;
+    aspect-ratio: auto;
+}
+
+.card.full-width img {
+    height: 100%;
+    aspect-ratio: auto;
+}
+
+.card-info h3 {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.card-info p {
+    font-size: 16px;
+    color: #757575;
+    /* Subdued grey */
+    margin-bottom: 8px;
+}
+
+.card-info .price {
+    font-size: 16px;
+    font-weight: 500;
+    color: #111;
+}
+
+/* Overlay style card */
+.card-overlay {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    color: #fff;
+    /* Assuming dark image */
+}
+
+.card-overlay h3 {
+    font-size: 32px;
     margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-.contact-info p {
-    margin-bottom: 10px;
-    color: #ced4da;
+.btn-secondary {
+    background: #fff;
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 15px;
+    display: inline-block;
 }
 
-.social-links a {
+.btn-secondary:hover {
+    background: #ddd;
+    opacity: 1;
+}
+
+/* Section Header Group */
+.section-header-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+/* Footer */
+footer {
+    background: #111;
+    color: #fff;
+    padding: 60px 48px 20px;
+    margin-top: auto;
+}
+
+.footer-links {
+    display: flex;
+    gap: 80px;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+}
+
+.column h4 {
+    font-family: 'Arial Black', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+}
+
+.column a {
     display: block;
-    color: #ced4da;
-    text-decoration: none;
-    margin-bottom: 10px;
+    color: #7e7e7e;
+    font-size: 12px;
+    margin-bottom: 12px;
+    font-weight: 500;
 }
 
-.social-links a:hover {
-    color: #ffffff;
+.column a:hover {
+    color: #fff;
 }
 
 .footer-bottom {
-    text-align: center;
-    border-top: 1px solid #495057;
+    border-top: 1px solid #333;
     padding-top: 20px;
-    color: #ced4da;
-    font-size: 14px;
+    display: flex;
+    justify-content: flex-end;
+    /* Nike copyright usually right or spread */
 }
 
-@media (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        gap: 20px;
+.footer-bottom p {
+    font-size: 11px;
+    color: #7e7e7e;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .navbar {
+        padding: 0 24px;
     }
-    
-    .footer-container {
+
+    .navbar nav {
+        display: none;
+        /* Hide regular menu for simplicity for now -> Hamburger usually needed */
+    }
+
+    .hero h1 {
+        font-size: 48px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card.full-width {
+        grid-column: span 1;
+    }
+
+    .footer-links {
+        gap: 40px;
         flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 30px;
+    }
+
+    .featured {
+        padding: 40px 24px;
+    }
+
+    .hero-content {
+        left: 24px;
     }
 }

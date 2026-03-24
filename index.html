@@ -3,141 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Development Experiments</title>
+    <title>Web Dev Experiments</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --surface-color: #1e293b;
-            --text-color: #f8fafc;
-            --accent-color: #3b82f6;
-            --accent-hover: #2563eb;
+            /* Minimalist UI/UX Palette */
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --hover-bg: #f1f5f9;
+            --focus-ring: rgba(37, 99, 235, 0.4);
         }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            line-height: 1.5;
         }
 
         .container {
-            max-width: 800px;
-            padding: 40px 20px;
-            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            padding: 40px 24px;
         }
 
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #60a5fa, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        p.subtitle {
-            font-size: 1.25rem;
-            color: #94a3b8;
-            margin-bottom: 50px;
-        }
-
-        .experiments-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background: var(--surface-color);
-            border-radius: 16px;
-            padding: 30px;
+        .header {
+            margin-bottom: 48px;
             text-align: left;
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.025em;
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .nav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .nav-card {
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             text-decoration: none;
             color: inherit;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(to right, #60a5fa, #a78bfa);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s ease;
+        .nav-card:hover, .nav-card:focus {
+            outline: none;
+            border-color: var(--text-muted);
+            background-color: var(--hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        .nav-card:focus-visible {
+            box-shadow: 0 0 0 3px var(--focus-ring);
         }
 
-        .card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .exp-number {
-            font-size: 0.875rem;
+        .nav-title {
+            font-size: 1.25rem;
             font-weight: 600;
-            color: #a78bfa;
+            margin: 0 0 8px 0;
+        }
+
+        .nav-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .exp-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        h2 {
-            font-size: 1.5rem;
-            margin: 0 0 12px 0;
-        }
-
-        p {
-            color: #cbd5e1;
-            margin: 0;
-            line-height: 1.6;
-            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
         }
         
-        .footer {
-            margin-top: 60px;
-            font-size: 0.9rem;
-            color: #64748b;
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.75rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Full Stack Development Lab</h1>
-        <p class="subtitle">A collection of web development experiments</p>
+        <div class="header">
+            <h1>Lab Repository</h1>
+            <p>Select an experiment to view.</p>
+        </div>
 
-        <div class="experiments-grid">
-            <a href="exp1/" class="card">
-                <span class="exp-number">Experiment 01</span>
-                <h2>Static Website Design</h2>
-                <p>A responsive online shoe store landing page utilizing pure Semantic HTML and Vanilla CSS Grid & Flexbox patterns.</p>
+        <nav class="nav-list" aria-label="Experiments Navigation">
+            <a href="exp1/" class="nav-card">
+                <span class="exp-badge">Experiment 01</span>
+                <h2 class="nav-title">Static Website Design</h2>
+                <p class="nav-desc">A responsive storefront landing page built with semantic HTML and CSS.</p>
             </a>
 
-            <a href="exp2/" class="card">
-                <span class="exp-number">Experiment 02</span>
-                <h2>JavaScript Fundamentals</h2>
-                <p>A dynamic contact form applying LocalStorage CRUD behavior, Form Validation, and Promises logic with Async/Await fetching.</p>
+            <a href="exp2/" class="nav-card">
+                <span class="exp-badge">Experiment 02</span>
+                <h2 class="nav-title">JavaScript Contact Manager</h2>
+                <p class="nav-desc">Dynamic DOM manipulation, LocalStorage integration, and Promises simulation.</p>
             </a>
-        </div>
-        
-        <div class="footer">
-            Designed for GitHub Pages Deployment
-        </div>
+        </nav>
     </div>
 </body>
 </html>
