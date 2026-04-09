@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rain Tomorrow Checker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Outfit:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero">
+      <p class="badge">Open-Meteo Forecast API</p>
+      <h1>Will It Rain Tomorrow?</h1>
+      <p class="subtitle">Enter a location and instantly get a tomorrow rain forecast. No API key needed.</p>
+    </section>
+
+    <section class="card">
+      <form id="weatherForm" autocomplete="off">
+        <label for="location">Location</label>
+        <input
+          id="location"
+          name="location"
+          type="text"
+          placeholder="e.g. Mumbai"
+          required
+        />
+
+        <div class="quick-wrap">
+          <p class="quick-title">Quick Locations</p>
+          <div class="quick-locations">
+            <button type="button" class="location-chip" data-location="Mumbai">Mumbai</button>
+            <button type="button" class="location-chip" data-location="Pune">Pune</button>
+            <button type="button" class="location-chip" data-location="Delhi">Delhi</button>
+            <button type="button" class="location-chip" data-location="Bengaluru">Bengaluru</button>
+            <button type="button" class="location-chip" data-location="Chennai">Chennai</button>
+            <button type="button" class="location-chip" data-location="Kolkata">Kolkata</button>
+          </div>
+        </div>
+
+        <button type="submit" id="checkBtn">Check Tomorrow</button>
+      </form>
+
+      <div id="status" class="status" aria-live="polite"></div>
+
+      <article id="result" class="result hidden" aria-live="polite">
+        <h2 id="resultTitle"></h2>
+        <p id="resultVerdict" class="verdict"></p>
+        <div class="meta-grid">
+          <p><span>Date:</span> <span id="resultDate">-</span></p>
+          <p><span>Rain Chance:</span> <span id="resultPop">-</span></p>
+          <p><span>Rain Volume:</span> <span id="resultRain">-</span></p>
+          <p><span>Temp (Day):</span> <span id="resultTemp">-</span></p>
+          <p><span>Humidity:</span> <span id="resultHumidity">-</span></p>
+          <p><span>Condition:</span> <span id="resultCondition">-</span></p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

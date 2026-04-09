@@ -1,2 +1,15 @@
 cache/
 skills-lock.json
+
+# Node.js dependencies
+node_modules/
+
+# Runtime and environment files
+.env
+.env.*
+*.log
+
+# Common build/cache outputs
+dist/
+coverage/
+.nyc_output/
