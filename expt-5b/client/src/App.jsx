@@ -1,4 +1,35 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+// Custom Switch
+function Switch({ checked, onChange, label }) {
+  return (
+    <label className="switch">
+      <input type="checkbox" checked={checked} onChange={e => onChange(e.target.checked)} />
+      <span className="slider" />
+      {label && <span className="switch-label">{label}</span>}
+    </label>
+  );
+}
+import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
+// Toast system
+function Toast({ toasts }) {
+  return (
+    <div className="toast-container">
+      {toasts.map((t) => (
+        <div key={t.id} className={`toast toast-${t.type}`}>{t.message}</div>
+      ))}
+    </div>
+  );
+}
+
+// Animated Progress Bar (for multi-step, demo only)
+function ProgressBar({ step, total }) {
+  const percent = Math.round((step / total) * 100);
+  return (
+    <div className="progress-bar-shell">
+      <div className="progress-bar" style={{ width: percent + "%" }} />
+      <span className="progress-label">Step {step} of {total}</span>
+    </div>
+  );
+}
 // Avatar color palette
 const AVATAR_COLORS = ["#1f8a7a", "#dc6f53", "#b95137", "#4e6377", "#c43636", "#f3b13b", "#5e60ce", "#3a86ff"];
 
@@ -107,6 +138,19 @@ function App() {
   const [editUser, setEditUser] = useState(null); // user object or null
   const [editForm, setEditForm] = useState(initialForm);
   const [deletingId, setDeletingId] = useState(null); // user id being deleted
+  // Toast state
+  const [toasts, setToasts] = useState([]);
+  // Demo: progress bar state (simulate multi-step)
+  const [step, setStep] = useState(1);
+  const totalSteps = 3;
+  // Demo: switch state
+  const [switchOn, setSwitchOn] = useState(false);
+  // Toast helpers
+  const showToast = useCallback((message, type = "info") => {
+    const id = Math.random().toString(36).slice(2);
+    setToasts(ts => [...ts, { id, message, type }]);
+    setTimeout(() => setToasts(ts => ts.filter(t => t.id !== id)), 2600);
+  }, []);
 
   const statusClass = useMemo(() => (isError ? "status error" : "status"), [isError]);
 
@@ -194,10 +238,12 @@ function App() {
 
       setForm(initialForm);
       setMessage("User created successfully");
+      showToast("User created!", "success");
       await fetchUsers();
     } catch (error) {
       setIsError(true);
       setMessage(error.message || "Create request failed");
+      showToast(error.message || "Create failed", "error");
       setIsLoading(false);
     }
   }
@@ -213,10 +259,12 @@ function App() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || "Unable to delete user");
       setMessage("User deleted");
+      showToast("User deleted", "success");
       await fetchUsers();
     } catch (error) {
       setIsError(true);
       setMessage(error.message || "Delete request failed");
+      showToast(error.message || "Delete failed", "error");
     } finally {
       setDeletingId(null);
     }
@@ -260,10 +308,12 @@ function App() {
       }
       setMessage("User updated");
       setEditUser(null);
+      showToast("User updated!", "success");
       await fetchUsers();
     } catch (error) {
       setIsError(true);
       setMessage(error.message || "Update request failed");
+      showToast(error.message || "Update failed", "error");
     } finally {
       setIsLoading(false);
     }
@@ -279,7 +329,15 @@ function App() {
       <div className="orb orb-coral" aria-hidden="true" />
       <div className="orb orb-teal" aria-hidden="true" />
 
+      <Toast toasts={toasts} />
       <main className="app-layout">
+        {/* Demo: Animated progress bar for multi-step */}
+        <ProgressBar step={step} total={totalSteps} />
+        <div className="progress-demo-row">
+          <button className="btn btn-accent ripple" onClick={() => setStep(s => Math.max(1, s-1))} disabled={step===1}>Prev</button>
+          <button className="btn btn-accent ripple" onClick={() => setStep(s => Math.min(totalSteps, s+1))} disabled={step===totalSteps}>Next</button>
+          <Switch checked={switchOn} onChange={setSwitchOn} label={switchOn ? "On" : "Off"} />
+        </div>
         <header className="hero panel">
           <p className="eyebrow">SE Computer Engineering | Experiment 5B</p>
           <h1>React User Management Console</h1>
@@ -506,12 +564,12 @@ function App() {
                     ))}
                   </div>
                   <div className="button-row">
-                    <button className="btn btn-muted" onClick={() => handleQuickEdit(user)} disabled={isLoading}>
+                    <button className="btn btn-muted ripple" onClick={() => handleQuickEdit(user)} disabled={isLoading}>
                       Edit
                     </button>
                     <button
                       className={
-                        "btn btn-danger" + (deletingId === user._id ? " deleting" : "")
+                        "btn btn-danger ripple" + (deletingId === user._id ? " deleting" : "")
                       }
                       onClick={() => handleDelete(user._id)}
                       disabled={isLoading || deletingId === user._id}
