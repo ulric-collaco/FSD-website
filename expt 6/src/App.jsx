@@ -22,7 +22,7 @@ function App() {
       const normalizedTasks = normalizeTasks(res.data);
 
       if (!Array.isArray(res.data) && !Array.isArray(res.data?.tasks)) {
-        console.error('Unexpected /api/tasks response shape:', res.data);
+        console.error('Unexpected /api/tasks response shape. Type:', typeof res.data);
         setErrorMessage('Could not load tasks: unexpected response from API.');
       }
 

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const TaskSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -9,7 +9,7 @@ const TaskSchema = new mongoose.Schema({
 
 const Task = mongoose.models.Task || mongoose.model('Task', TaskSchema);
 
-module.exports = async (req, res) => {
+const tasksHandler = async (req, res) => {
   if (mongoose.connection.readyState !== 1) {
     await mongoose.connect(process.env.MONGODB_URI);
   }
@@ -47,3 +47,5 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+export default tasksHandler;
