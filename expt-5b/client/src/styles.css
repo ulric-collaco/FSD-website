@@ -1,3 +1,63 @@
+/* Modal styles */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(23,33,43,0.18);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s;
+}
+.modal {
+  background: var(--panel);
+  border-radius: 18px;
+  box-shadow: 0 8px 40px rgba(23,33,43,0.18);
+  padding: 2.2rem 2.2rem 1.2rem;
+  min-width: 340px;
+  max-width: 98vw;
+  position: relative;
+  animation: rise 0.3s cubic-bezier(.4,1.6,.6,1);
+}
+.modal-close {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.modal-close:hover {
+  color: var(--danger);
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+/* Delete button loading */
+.btn.deleting {
+  opacity: 0.7;
+  pointer-events: none;
+  position: relative;
+}
+.btn.deleting::after {
+  content: '';
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid var(--danger-deep);
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-left: 0.5em;
+  vertical-align: middle;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 @import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Alegreya+Sans:wght@400;500;700&display=swap");
 
 :root {

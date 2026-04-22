@@ -1,5 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 
+function Modal({ open, onClose, children }) {
+  if (!open) return null;
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        {children}
+        <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
+      </div>
+    </div>
+  );
+}
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 
 const initialForm = {
@@ -39,6 +51,9 @@ function App() {
   const [message, setMessage] = useState("Loading users...");
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [editUser, setEditUser] = useState(null); // user object or null
+  const [editForm, setEditForm] = useState(initialForm);
+  const [deletingId, setDeletingId] = useState(null); // user id being deleted
 
   const statusClass = useMemo(() => (isError ? "status error" : "status"), [isError]);
 
@@ -132,66 +147,67 @@ function App() {
 
   async function handleDelete(id) {
     const confirmed = window.confirm("Delete this user?");
-    if (!confirmed) {
-      return;
-    }
-
+    if (!confirmed) return;
+    setDeletingId(id);
     try {
-      setIsLoading(true);
       setIsError(false);
       setMessage("Deleting user...");
-
-      const response = await fetch(`${API_BASE}/api/users/${id}`, {
-        method: "DELETE"
-      });
-
+      const response = await fetch(`${API_BASE}/api/users/${id}`, { method: "DELETE" });
       const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message || "Unable to delete user");
-      }
-
+      if (!response.ok) throw new Error(result.message || "Unable to delete user");
       setMessage("User deleted");
       await fetchUsers();
     } catch (error) {
       setIsError(true);
       setMessage(error.message || "Delete request failed");
-      setIsLoading(false);
+    } finally {
+      setDeletingId(null);
     }
   }
 
-  async function handleQuickEdit(user) {
-    const name = window.prompt("Updated name", user.name || "");
-    if (name === null) {
-      return;
-    }
+  function handleQuickEdit(user) {
+    setEditUser(user);
+    setEditForm({
+      name: user.name || "",
+      email: user.email || "",
+      age: user.age || "",
+      userId: user.userId || "",
+      hobbies: (user.hobbies || []).join(", "),
+      bio: user.bio || ""
+    });
+  }
 
-    const age = window.prompt("Updated age", String(user.age ?? ""));
-    if (age === null) {
-      return;
-    }
-
+  async function handleEditSubmit(event) {
+    event.preventDefault();
     try {
       setIsLoading(true);
       setIsError(false);
       setMessage("Updating user...");
-
-      const response = await fetch(`${API_BASE}/api/users/${user._id}`, {
+      const payload = {
+        name: editForm.name.trim(),
+        email: editForm.email.trim(),
+        age: editForm.age.trim() ? Number(editForm.age) : undefined,
+        userId: editForm.userId.trim(),
+        hobbies: parseHobbies(editForm.hobbies),
+        bio: editForm.bio.trim()
+      };
+      const response = await fetch(`${API_BASE}/api/users/${editUser._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), age: Number(age) })
+        body: JSON.stringify(payload)
       });
-
       const result = await response.json();
       if (!response.ok) {
         const updateMessage = Array.isArray(result.errors) ? result.errors.join(" | ") : result.message;
         throw new Error(updateMessage || "Unable to update user");
       }
-
       setMessage("User updated");
+      setEditUser(null);
       await fetchUsers();
     } catch (error) {
       setIsError(true);
       setMessage(error.message || "Update request failed");
+    } finally {
       setIsLoading(false);
     }
   }
@@ -419,8 +435,14 @@ function App() {
                     <button className="btn btn-muted" onClick={() => handleQuickEdit(user)} disabled={isLoading}>
                       Edit
                     </button>
-                    <button className="btn btn-danger" onClick={() => handleDelete(user._id)} disabled={isLoading}>
-                      Delete
+                    <button
+                      className={
+                        "btn btn-danger" + (deletingId === user._id ? " deleting" : "")
+                      }
+                      onClick={() => handleDelete(user._id)}
+                      disabled={isLoading || deletingId === user._id}
+                    >
+                      {deletingId === user._id ? "Deleting..." : "Delete"}
                     </button>
                   </div>
                 </article>
@@ -429,6 +451,77 @@ function App() {
           )}
         </section>
       </main>
+      <Modal open={!!editUser} onClose={() => setEditUser(null)}>
+        <h2>Edit Student</h2>
+        <form className="grid" onSubmit={handleEditSubmit}>
+          <label>
+            Name
+            <input
+              required
+              minLength={3}
+              value={editForm.name}
+              onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
+            />
+          </label>
+          <label>
+            Email
+            <input
+              required
+              type="email"
+              value={editForm.email}
+              onChange={e => setEditForm(f => ({ ...f, email: e.target.value }))}
+            />
+          </label>
+          <label>
+            Age
+            <input
+              type="number"
+              min="0"
+              max="120"
+              value={editForm.age}
+              onChange={e => setEditForm(f => ({ ...f, age: e.target.value }))}
+            />
+          </label>
+          <label>
+            User ID
+            <input
+              required
+              value={editForm.userId}
+              onChange={e => setEditForm(f => ({ ...f, userId: e.target.value }))}
+            />
+          </label>
+          <label className="full-width">
+            Hobbies (comma separated)
+            <input
+              value={editForm.hobbies}
+              onChange={e => setEditForm(f => ({ ...f, hobbies: e.target.value }))}
+              placeholder="coding, music"
+            />
+          </label>
+          <label className="full-width">
+            Bio
+            <textarea
+              rows={3}
+              value={editForm.bio}
+              onChange={e => setEditForm(f => ({ ...f, bio: e.target.value }))}
+              placeholder="Short profile bio"
+            />
+          </label>
+          <div className="button-row full-width">
+            <button className="btn btn-accent" disabled={isLoading} type="submit">
+              {isLoading ? "Please wait..." : "Update"}
+            </button>
+            <button
+              className="btn btn-muted"
+              type="button"
+              onClick={() => setEditUser(null)}
+              disabled={isLoading}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }
