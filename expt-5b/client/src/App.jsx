@@ -1,4 +1,56 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
+// Avatar color palette
+const AVATAR_COLORS = ["#1f8a7a", "#dc6f53", "#b95137", "#4e6377", "#c43636", "#f3b13b", "#5e60ce", "#3a86ff"];
+
+function getAvatarColor(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+function getInitials(name) {
+  return name.split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
+}
+
+function Avatar({ name }) {
+  const color = getAvatarColor(name || "?");
+  const initials = getInitials(name || "?");
+  return (
+    <span className="avatar" style={{ background: color }} title={name} aria-label={name}>
+      {initials}
+    </span>
+  );
+}
+
+// Highlight search matches
+function highlight(text, query) {
+  if (!query) return text;
+  const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+  const parts = String(text).split(re);
+  return parts.map((part, i) =>
+    re.test(part) ? <mark key={i}>{part}</mark> : part
+  );
+}
+
+// Animated counter
+function AnimatedNumber({ value, duration = 800 }) {
+  const ref = useRef();
+  const [display, setDisplay] = useState(value);
+  useEffect(() => {
+    let start = ref.current || value;
+    let startTime;
+    function animate(ts) {
+      if (!startTime) startTime = ts;
+      const progress = Math.min((ts - startTime) / duration, 1);
+      setDisplay(Math.round(start + (value - start) * progress));
+      if (progress < 1) requestAnimationFrame(animate);
+      else ref.current = value;
+    }
+    requestAnimationFrame(animate);
+    // eslint-disable-next-line
+  }, [value]);
+  return <span>{display}</span>;
+}
 
 function Modal({ open, onClose, children }) {
   if (!open) return null;
@@ -48,6 +100,7 @@ function App() {
   const [filters, setFilters] = useState(initialFilters);
   const [users, setUsers] = useState([]);
   const [meta, setMeta] = useState({ total: 0, page: 1 });
+  const [allHobbies, setAllHobbies] = useState([]);
   const [message, setMessage] = useState("Loading users...");
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -94,6 +147,10 @@ function App() {
 
       setUsers(payload.data || []);
       setMeta({ total: payload.total || 0, page: payload.page || 1 });
+      // Collect all hobbies for filter chips
+      const hobbiesSet = new Set();
+      (payload.data || []).forEach(u => (u.hobbies||[]).forEach(h => hobbiesSet.add(h)));
+      setAllHobbies(Array.from(hobbiesSet).sort());
       setMessage("Users loaded");
     } catch (error) {
       setIsError(true);
@@ -404,7 +461,26 @@ function App() {
         <section className="panel users-panel">
           <div className="users-head">
             <h2>Students</h2>
-            <p className="meta">Total {meta.total} | Page {meta.page}</p>
+            <div className="stats-row">
+              <span className="stat">Total: <AnimatedNumber value={meta.total} /></span>
+              <span className="stat">Page: <AnimatedNumber value={meta.page} /></span>
+              <span className="stat">Avg Age: <AnimatedNumber value={users.length ? Math.round(users.reduce((a,b)=>a+(b.age||0),0)/users.length) : 0} /></span>
+            </div>
+            <div className="hobby-chips">
+              {allHobbies.map(hobby => (
+                <button
+                  key={hobby}
+                  className={
+                    "chip" + (filters.text.toLowerCase() === hobby.toLowerCase() ? " chip-active" : "")
+                  }
+                  onClick={() => setFilters(f => ({ ...f, text: hobby }))}
+                  type="button"
+                  aria-label={`Filter by hobby ${hobby}`}
+                >
+                  {hobby}
+                </button>
+              ))}
+            </div>
           </div>
           <p className={statusClass}>{message}</p>
 
@@ -415,22 +491,20 @@ function App() {
               {users.map((user) => (
                 <article key={user._id} className="user-card">
                   <div className="card-top">
-                    <h3>{user.name}</h3>
+                    <Avatar name={user.name} />
+                    <h3>{highlight(user.name, filters.name)}</h3>
                     <span className="age-pill">Age {user.age ?? "N/A"}</span>
                   </div>
-
-                  <p className="minor">{user.email}</p>
-                  <p className="minor">User ID: {user.userId}</p>
-                  <p className="bio">{user.bio || "No bio"}</p>
-
+                  <p className="minor">{highlight(user.email, filters.text)}</p>
+                  <p className="minor">User ID: {highlight(user.userId, filters.text)}</p>
+                  <p className="bio">{highlight(user.bio, filters.text)}</p>
                   <div className="tags">
                     {(user.hobbies?.length ? user.hobbies : ["none"]).map((hobby) => (
                       <span key={`${user._id}-${hobby}`} className="tag">
-                        {hobby}
+                        {highlight(hobby, filters.text)}
                       </span>
                     ))}
                   </div>
-
                   <div className="button-row">
                     <button className="btn btn-muted" onClick={() => handleQuickEdit(user)} disabled={isLoading}>
                       Edit

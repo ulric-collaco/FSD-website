@@ -1,3 +1,65 @@
+/* Avatar styles */
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2em;
+  height: 2.2em;
+  border-radius: 50%;
+  font-family: "Unbounded", sans-serif;
+  font-weight: 700;
+  font-size: 1.1em;
+  color: #fff;
+  margin-right: 0.7em;
+  box-shadow: 0 2px 8px rgba(23,33,43,0.10);
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+/* Highlighted search */
+mark {
+  background: #ffe066;
+  color: inherit;
+  padding: 0 0.1em;
+  border-radius: 0.2em;
+}
+
+/* Hobby filter chips */
+.hobby-chips {
+  margin: 0.5em 0 0.7em 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+}
+.chip {
+  background: var(--panel);
+  border: 1.5px solid var(--teal);
+  color: var(--teal);
+  border-radius: 999px;
+  padding: 0.18em 0.95em;
+  font-size: 0.98em;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+}
+.chip-active, .chip:hover {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal);
+}
+
+/* Stats row */
+.stats-row {
+  display: flex;
+  gap: 1.2em;
+  margin: 0.2em 0 0.2em 0;
+  font-size: 1.08em;
+  font-weight: 500;
+  color: var(--muted);
+}
+.stat {
+  display: inline-block;
+  min-width: 3.5em;
+}
 /* Modal styles */
 .modal-backdrop {
   position: fixed;
