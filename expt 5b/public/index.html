@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Experiment 5B - User Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Manrope:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-left" aria-hidden="true"></div>
+    <div class="ambient ambient-right" aria-hidden="true"></div>
+
+    <main class="layout">
+      <header class="hero">
+        <p class="eyebrow">Full Stack Development | Experiment 5B</p>
+        <h1>User Management Console</h1>
+        <p class="subtitle">
+          MongoDB + Node.js interface to create, query, update, and delete users.
+        </p>
+      </header>
+
+      <section class="panel" aria-labelledby="create-user-heading">
+        <h2 id="create-user-heading">Create User</h2>
+        <form id="user-form" class="form-grid">
+          <label>
+            Name
+            <input type="text" id="name" name="name" minlength="3" required />
+          </label>
+
+          <label>
+            Email
+            <input type="email" id="email" name="email" required />
+          </label>
+
+          <label>
+            Age
+            <input type="number" id="age" name="age" min="0" max="120" />
+          </label>
+
+          <label>
+            User ID
+            <input type="text" id="userId" name="userId" required />
+          </label>
+
+          <label class="field-wide">
+            Hobbies (comma separated)
+            <input type="text" id="hobbies" name="hobbies" placeholder="coding, music" />
+          </label>
+
+          <label class="field-wide">
+            Bio
+            <textarea id="bio" name="bio" rows="3" placeholder="Short user bio"></textarea>
+          </label>
+
+          <div class="actions field-wide">
+            <button type="submit" class="btn btn-primary">Add User</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel" aria-labelledby="filter-heading">
+        <h2 id="filter-heading">Search and Filter</h2>
+        <form id="filter-form" class="filter-grid">
+          <label>
+            Name Search
+            <input type="text" id="searchName" placeholder="e.g. Alice" />
+          </label>
+
+          <label>
+            Min Age
+            <input type="number" id="minAge" min="0" max="120" />
+          </label>
+
+          <label>
+            Max Age
+            <input type="number" id="maxAge" min="0" max="120" />
+          </label>
+
+          <label>
+            Text in Bio
+            <input type="text" id="textSearch" placeholder="MongoDB backend" />
+          </label>
+
+          <label>
+            Sort By
+            <select id="sortBy">
+              <option value="createdAt">Created At</option>
+              <option value="name">Name</option>
+              <option value="age">Age</option>
+              <option value="email">Email</option>
+            </select>
+          </label>
+
+          <label>
+            Order
+            <select id="order">
+              <option value="desc">Descending</option>
+              <option value="asc">Ascending</option>
+            </select>
+          </label>
+
+          <div class="actions field-wide">
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+            <button type="button" id="clearFilters" class="btn btn-secondary">Clear</button>
+            <button type="button" id="loadUsers" class="btn btn-secondary">Refresh</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel" aria-labelledby="list-heading">
+        <div class="list-header">
+          <h2 id="list-heading">Users</h2>
+          <p id="meta" class="meta">Loading...</p>
+        </div>
+        <p id="status" class="status" aria-live="polite"></p>
+        <div id="user-list" class="user-list"></div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
